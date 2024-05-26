@@ -1,18 +1,11 @@
 let ball, floor;
 
 function setup() {
-	new Canvas(238, 200);
+	new Canvas(1080, 1920);
 	world.gravity.y = 10;
-
-	ball = new Sprite();
-	ball.diameter = 50;
-	ball.y = 30;
-
-	floor = new Sprite();
-	floor.y = 190;
-	floor.w = 238;
-	floor.h = 5;
-	floor.collider = 'static';
+	ball = new Sprite(40, 30, 50);
+	firstFloor = new Sprite(40, 155, 80, 5, 'static');
+	secondFloor = new Sprite(40, 155, 80, 5, 'static');
 }
 
 function draw() {
