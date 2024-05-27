@@ -3,16 +3,30 @@ const ballSize = 70;
 let ball;
 const platformHeight = 20;
 const platformY = 3 * (window.innerHeight / 4);
+const rampWidth = 200;
+const rampHeight = 100;
+const rampAngle = 30;
+let ramp1X, ramp2X;
 const w = window.innerWidth;
 const h = window.innerHeight;
 
 function setup() {
   createCanvas(w, h);
-  ball = new Ball(w / 2, platformY - ballSize / 2, ballSize, "#ff8e0d");
+  
+  // Calculate X-coordinates for the ramps
+  ramp1X = w / 4 - rampWidth / 2;
+  ramp2X = 3 * w / 4 - rampWidth / 2;
+  
+  // Initialize the ball on the first ramp
+  ball = new Ball(ramp1X + rampWidth / 2, platformY - ballSize / 2 - rampHeight, ballSize, "#ff8e0d");
 }
 
 function draw() {
   background(252, 228, 204);
+  
+  // Show the ramps
+  drawRamp(ramp1X, platformY, rampWidth, rampHeight, rampAngle);
+  drawRamp(ramp2X, platformY, rampWidth, rampHeight, -rampAngle);
   
   // Show the platform
   fill(100);
@@ -28,18 +42,13 @@ function draw() {
   // Move the ball
   ball.move(deltaX, deltaY);
   
-  // Check if the ball is on the platform
-  if (ball.y + ball.size / 2 >= platformY && ball.y + ball.size / 2 <= platformY + platformHeight) {
-    // Ball is on the platform
-    ball.isOnPlatform = true;
-  } else {
-    // Ball is off the platform
-    ball.isOnPlatform = false;
-  }
+  // Check if the ball is on the ramps
+  const isOnRamp1 = ball.isOnRamp(ramp1X, platformY, rampWidth, rampHeight, rampAngle);
+  const isOnRamp2 = ball.isOnRamp(ramp2X, platformY, rampWidth, rampHeight, -rampAngle);
   
-  // If the ball falls off the platform, reset its position
-  if (!ball.isOnPlatform) {
-    ball.y = platformY - ball.size / 2;
+  // If the ball is not on any of the ramps, apply gravity
+  if (!isOnRamp1 && !isOnRamp2) {
+    ball.applyGravity();
   }
 }
 
@@ -49,7 +58,6 @@ class Ball {
     this.y = y;
     this.size = size;
     this.color = color;
-    this.isOnPlatform = true;
   }
   
   show() {
@@ -59,11 +67,6 @@ class Ball {
   }
 
   move(xOff, yOff) {
-    if (!this.isOnPlatform) {
-      // If the ball is off the platform, apply gravity
-      yOff += 0.5;
-    }
-    
     this.x += xOff;
     this.y += yOff;
     
@@ -71,4 +74,26 @@ class Ball {
     this.x = constrain(this.x, this.size / 2, width - this.size / 2);
     this.y = constrain(this.y, this.size / 2, height - this.size / 2);
   }
+  
+  isOnRamp(rx, ry, rw, rh, angle) {
+    // Check if the ball is on the specified ramp
+    return this.x >= rx && this.x <= rx + rw &&
+           this.y >= ry - (this.x - rx) * tan(angle) &&
+           this.y <= ry;
+  }
+  
+  applyGravity() {
+    // Apply simple gravity effect
+    this.y += 0.5;
+  }
+}
+
+function drawRamp(x, y, w, h, angle) {
+  // Draw a ramp with the specified properties
+  push();
+  translate(x, y);
+  rotate(-angle);
+  fill(150);
+  rect(0, 0, w, h);
+  pop();
 }
