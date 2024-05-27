@@ -1,0 +1,16 @@
+html, body {
+  margin: 0;
+  padding: 0;
+}
+canvas {
+  display: block;
+}
+#motion{
+  position:absolute;
+  height:3vh; 
+/*   width: 98vw;  */
+  margin-left:1vw;
+  margin-top: 10px; 
+  margin-bottom: 10px; 
+  font-size:2vh;
+}
