@@ -19,7 +19,7 @@ function setup() {
 }
 
 function draw() {
-  background(255, 205, 0, .5);
+  background(45, 41, 38);
   drawGoal();
   
   if (!goalReached) {
@@ -85,7 +85,7 @@ class Ball {
 const ball = new Ball(beginX, beginY, 70, "#C8102E");
 
 function drawGoal() {
-  fill(45, 41, 38);
+  fill(255, 205, 0);
   // Goal arms
   rect(goalX, goalY, goalArmWidth, goalHeight);
   rect(goalX + goalWidth - goalArmWidth, goalY, goalArmWidth, goalHeight);
